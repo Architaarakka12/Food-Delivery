@@ -1,0 +1,7 @@
+<% if object.errors.any? %>
+  <ul>
+    <% object.errors.full_messages.each do |message| %>
+     <div class="alert alert-danger" ><%= message %></div>
+    <% end %>
+  </ul>
+<% end %>

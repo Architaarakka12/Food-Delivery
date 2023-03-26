@@ -1,0 +1,45 @@
+<%= form_with model: @user, url: account_path, method: :put do |form| %>
+  <%= render partial: "shared/form_errors", locals: { object: form.object } %>
+  <div class="form-outline mb-4">
+    <%= form.label :email, "Current Email" %>
+    <%= form.email_field :email, disabled: true, class:"form-control", id:"exampleInputEmail1" %>
+  </div>
+  <div class="form-outline mb-4">
+    <%= form.label :unconfirmed_email, "New Email" %>
+    <%= form.text_field :unconfirmed_email, class:"form-control", id:"exampleInputEmail1" %>
+  </div>
+  <div class="form-outline mb-4">
+    <%= form.label :password, "Password (leave blank if you don't want to change it)" %>
+    <%= form.password_field :password, class:"form-control", id:"exampleInputEmail1" %>
+  </div>
+  <div class="form-outline mb-4">
+    <%= form.label :password_confirmation %>
+    <%= form.password_field :password_confirmation, class:"form-control", id:"exampleInputEmail1" %>
+  </div>
+  <hr/>
+  <div class="form-outline mb-4">
+    <%= form.label :current_password, "Current password (we need your current password to confirm your changes)" %>
+    <%= form.password_field :current_password, required: true, class:"form-control", id:"exampleInputEmail1" %>
+  </div>
+  <%= form.submit "Update Account", class:"btn btn-primary btn-block mb-4"  %>
+<% end %>
+
+<h2>Current Logins</h2>
+<% if @active_sessions.any? %>
+
+<table  class="table table-info table-bordered border-secondary table-striped">
+   <thead>
+        <tr>
+            <th>User Agent</th>
+            <th>IP Address</th>
+            <th>Signed In At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%= render @active_sessions %>
+        </tbody>
+</table>
+<% end %>
+
+
+

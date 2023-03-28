@@ -1,0 +1,85 @@
+<table class="responsive-table">
+	<thead>
+		<tr style="background-color:#BCAAA4;">
+			<th data-field="id">S/N</th>
+			<th data-field="name">Name</th>
+			<th data-field="description">Description</th>
+			<th data-field="price">Price</th>
+			<th data-field="quantity">Quantity</th>
+			<th data-field="line total">Line Total</th>
+		</tr>
+	</thead>
+	<tbody>
+		
+<%  @current_order.sub_total = 0 %>
+<% @current_order.ordered_items.each do |index, details| %>
+<% if details["food"]["sales"]["status"] %>
+<% @item_total_price = details["food"]['sales']["price"] * details["qty"]
+@current_order.sub_total += details["food"]['sales']["price"] * details["qty"] %>
+<% else %>
+	<% @item_total_price = details["food"]["price"] * details["qty"]
+	@current_order.sub_total += details["food"]['price'] * details["qty"] %>
+	<% end %>
+	<tr>
+		<td><%= index %></td>
+		<td><%= details["food"]['name'] %></td>
+		<td><%= details["food"]['description'] %></td>
+		<% if details["food"]['sales']['status'] %>
+			<td><%= details["food"]['sales']["price"] %></td>
+		<% else %>
+			<td><%= details["food"]['price'] %></td>
+		<% end %>
+		<td><%= details["qty"] %></td>
+		<td>N<%= @item_total_price %></td>
+	</tr>
+	</tbody>
+	<% end %>
+
+	<!--Find a better way of doing this -->
+	<tr style="border-top:1px solid #3e2511">
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>Subtotal</td>
+		<td></td>
+		<td>N<%= @current_order.sub_total %></td>
+	</tr>
+	<tr>
+		<% @current_order.vat %>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>VAT</td>
+		<td></td>
+		<td>N<%= @current_order.vat %></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>Delivery cost</td>
+		<td></td>
+		<td>N<%= @current_order.delivery_cost %></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>Delivery time</td>
+		<td></td>
+		<td><%= @current_order.pickup_time %> minutes</td>
+	</tr>
+	<tfoot>
+		<!--Find a better way of doing this -->
+		<tr style="border-top:2px solid #3e2511">
+			<% @current_order.total = @current_order.sub_total + @current_order.delivery_cost + @current_order.vat %>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>Total</td>
+			<td></td>
+			<td id="total">N<%= @current_order.total %></td>
+		</tr>
+	</tfoot>
+</table>
+<% session[:order][:details] = {"sub_total"=>@current_order.sub_total, "total"=>@current_order.total} %>
